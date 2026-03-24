@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8001:8001"
+    volumes:
+      - demo-db:/app/data
+    environment:
+      - DATABASE_URL=sqlite:///./data/pitbrain-demo.db
+      - SECRET_KEY=demo-pitbrain-2024-secure-key-for-client-evaluation
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8001/api/v1
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
+volumes:
+  demo-db:
